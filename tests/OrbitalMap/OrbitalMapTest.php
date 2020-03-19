@@ -23,8 +23,8 @@ class OrbitalMapTest extends TestCase
     public function testOrbitCount($input, $expectedResult)
     {
         $orbitMap = new OrbitalMap($this->loadFileInput($input));
-        $this->assertEquals($expectedResult['D'], $orbitMap->countOrbits('D', false));
-        $this->assertEquals($expectedResult['L'], $orbitMap->countOrbits('L', false));
+        $this->assertEquals($expectedResult['D'], $orbitMap->countOrbits('D'));
+        $this->assertEquals($expectedResult['L'], $orbitMap->countOrbits('L'));
         $this->assertEquals($expectedResult['all'], $orbitMap->countTotalOrbits());
     }
 
@@ -39,26 +39,17 @@ class OrbitalMapTest extends TestCase
             [
                 __DIR__ . '/input/rawInput.txt',
                 [
-                    'COM' => [
-                        'B' => [
-                            'C' => [
-                                'D' => [
-                                    'E' => [
-                                        'F' => [],
-                                        'J' => [
-                                            'K' => [
-                                                'L' => []
-                                            ]
-                                        ]
-                                    ],
-                                    'I' => []
-                                ]
-                            ],
-                            'G' => [
-                                'H' => []
-                            ]
-                        ]
-                    ]
+                    'B' => 'COM',
+                    'C' => 'B',
+                    'D' => 'C',
+                    'E' => 'D',
+                    'F' => 'E',
+                    'G' => 'B',
+                    'H' => 'G',
+                    'I' => 'D',
+                    'J' => 'E',
+                    'K' => 'J',
+                    'L' => 'K'
                 ]
             ]
         ];

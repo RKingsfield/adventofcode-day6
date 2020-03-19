@@ -9,57 +9,37 @@ class OrbitalMap
     const ROUTE_NODE = 'COM';
 
     protected $map;
+    protected $orbitalBodies;
 
     public function __construct(string $inputMap)
     {
-        $this->map[self::ROUTE_NODE] = [];
-        $holding = [];
+        $this->map = [];
+        $this->orbitalBodies = [];
         foreach (explode(PHP_EOL, $inputMap) as $k => $orbitalBody) {
             $nodes = explode(')', $orbitalBody);
             if (count($nodes) !== 2) {
                 throw new InvalidArgumentException('Invalid Orbital OrbitalMap given');
             }
 
-            $parentNode = $nodes[0];
-            $childNode = $nodes[1];
-            if (isset($holding[$childNode])) {
-                $childNode = [$childNode => $holding[$childNode]];
-                unset($holding[$childNode]);
-            }
+            $planetoid = $nodes[0];
+            $satellite = $nodes[1];
 
-            if ($route = $this->findRouteToNode($this->map, $parentNode)) {
-                $this->addToMap($route, $childNode);
-            } else {
-                $holding[$parentNode] = $childNode;
-            }
+            $this->map[$satellite] = $planetoid;
+            $this->orbitalBodies[] = $planetoid;
+            $this->orbitalBodies[] = $satellite;
         }
+        $this->orbitalBodies = array_unique($this->orbitalBodies);
     }
 
-    protected function addToMap(array $route, string $child): self
+    protected function getRouteToNode($n)
     {
-        $previousNode = &$this->map;
-        foreach ($route as $nodeIndex) {
-            $previousNode = &$previousNode[$nodeIndex];
+        $route = [];
+        $holdValue = $this->map[$n] ?? null;
+        while (!is_null($holdValue)) {
+            $route[] = $holdValue;
+            $holdValue = $this->map[$holdValue] ?? null;
         }
-
-        $previousNode[$child] = [];
-        return $this;
-    }
-
-    protected function findRouteToNode(array $map, string $nodeToFind): ?array
-    {
-        if (isset($map[$nodeToFind])) {
-            return [$nodeToFind];
-        }
-
-        foreach ($map as $currentNode => $subMap) {
-            if ($route = $this->findRouteToNode($subMap, $nodeToFind)) {
-                array_unshift($route, $currentNode);
-                return $route;
-            }
-        }
-
-        return null;
+        return $route;
     }
 
     public function asArray(): array
@@ -67,30 +47,17 @@ class OrbitalMap
         return $this->map;
     }
 
-    public function countOrbits(string $n, bool $includeChildrenCount = true): int
+    public function countOrbits(string $n): int
     {
-        $route = $this->findRouteToNode($this->map, $n);
-        $count = count($route) - 1;
-        if (!$includeChildrenCount) {
-            return $count;
-        }
-        foreach ($this->getNode($route) as $childNodeIndex => $childNode) {
-            $count += $this->countOrbits($childNodeIndex);
-        }
-        return $count;
+        return count($this->getRouteToNode($n));
     }
 
     public function countTotalOrbits(): int
     {
-        return $this->countOrbits(self::ROUTE_NODE);
-    }
-
-    protected function getNode(array $route): array
-    {
-        $currentNode = $this->map;
-        foreach ($route as $index) {
-            $currentNode = $currentNode[$index];
+        $count = 0;
+        foreach($this->orbitalBodies as $orbitalBody){
+            $count += $this->countOrbits($orbitalBody);
         }
-        return $currentNode;
+        return $count;
     }
 }
