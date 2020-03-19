@@ -31,10 +31,10 @@ class OrbitalMapTest extends TestCase
     /**
      * @dataProvider dataProviderForTraversal
      */
-    public function testOrbitTraversal($input, $expectedResult)
+    public function testOrbitalMapShortestPath($input, $expectedResult)
     {
         $orbitMap = new OrbitalMap($this->loadFileInput($input['filename']));
-        $this->assertEquals($expectedResult, $orbitMap->shortestTraversal($input['nodeOne'], $input['nodeTwo']));
+        $this->assertEquals($expectedResult, $orbitMap->getShortestPath($input['nodeOne'], $input['nodeTwo']));
     }
 
     protected function loadFileInput($expectedFilePath)
@@ -104,6 +104,14 @@ class OrbitalMapTest extends TestCase
                     'nodeTwo' => 'SAN'
                 ],
                 4
+            ],
+            [
+                [
+                    'filename' => __DIR__ . '/input/rawLargeInput.txt',
+                    'nodeOne' => 'YOU',
+                    'nodeTwo' => 'SAN'
+                ],
+                454
             ],
         ];
     }

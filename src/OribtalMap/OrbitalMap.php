@@ -60,4 +60,12 @@ class OrbitalMap
         }
         return $count;
     }
+
+    public function getShortestPath($node1, $node2)
+    {
+        $route1 = $this->getRouteToNode($node1);
+        $route2 = $this->getRouteToNode($node2);
+        $unsharedNodes = array_merge(array_diff($route1, $route2), array_diff($route2, $route1));
+        return count($unsharedNodes);
+    }
 }
