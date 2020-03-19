@@ -61,7 +61,7 @@ class OrbitMap
         return null;
     }
 
-    public function getOrbitalMap(): array
+    public function asArray(): array
     {
         return $this->map;
     }

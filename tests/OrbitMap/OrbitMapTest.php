@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Tests\OrbitCounter;
+namespace App\Tests\OrbitMap;
 
-use App\OrbitCounter\OrbitCounter;
+use App\OrbitCounter\OrbitMap;
 use PHPUnit\Framework\TestCase;
 
-class OrbitCounterTest extends TestCase
+class OrbitMapTest extends TestCase
 {
-
     /**
      * @dataProvider dataProviderForConstructor
      */
     public function testOrbitCounterConstructor($input, $expectedResult)
     {
-        $orbitCounter = new OrbitCounter($this->loadFileInput($input));
-        $this->assertEquals($expectedResult, $orbitCounter->getOrbitalMap());
+        $orbitMap = new OrbitMap($this->loadFileInput($input));
+        $this->assertEquals($expectedResult, $orbitMap->asArray());
     }
 
     /**
@@ -23,10 +22,10 @@ class OrbitCounterTest extends TestCase
      */
     public function testOrbitCount($input, $expectedResult)
     {
-        $orbitCounter = new OrbitCounter($this->loadFileInput($input));
-        $this->assertEquals($expectedResult['D'], $orbitCounter->countOrbits('D'));
-        $this->assertEquals($expectedResult['L'], $orbitCounter->countOrbits('L'));
-        $this->assertEquals($expectedResult['all'], $orbitCounter->countOrbits());
+        $orbitMap = new OrbitMap($this->loadFileInput($input));
+        $this->assertEquals($expectedResult['D'], $orbitMap->countOrbits('D'));
+        $this->assertEquals($expectedResult['L'], $orbitMap->countOrbits('L'));
+        $this->assertEquals($expectedResult['all'], $orbitMap->countOrbits());
     }
 
     protected function loadFileInput($expectedFilePath)
@@ -38,7 +37,7 @@ class OrbitCounterTest extends TestCase
     {
         return [
             [
-                __DIR__ . '/input/orbitalMap.txt',
+                __DIR__ . '/input/rawInput.txt',
                 [
                     'COM' => [
                         'B' => [
@@ -69,7 +68,7 @@ class OrbitCounterTest extends TestCase
     {
         return [
             [
-                __DIR__ . '/input/orbitalMap.txt',
+                __DIR__ . '/input/rawInput.txt',
                 [
                     'D' => 3,
                     'L' => 7,
