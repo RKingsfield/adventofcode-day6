@@ -74,6 +74,16 @@ class OrbitalMapTest extends TestCase
                     'L' => 7,
                     'all' => 42
                 ]
+            ],
+            [
+
+                __DIR__ . '/input/rawComplexInput.txt',
+                [
+                    'D' => 3,
+                    'L' => 7,
+                    'all' => 42
+                ]
+
             ]
         ];
     }
