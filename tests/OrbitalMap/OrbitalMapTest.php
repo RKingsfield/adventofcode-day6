@@ -28,6 +28,15 @@ class OrbitalMapTest extends TestCase
         $this->assertEquals($expectedResult['all'], $orbitMap->countTotalOrbits());
     }
 
+    /**
+     * @dataProvider dataProviderForTraversal
+     */
+    public function testOrbitTraversal($input, $expectedResult)
+    {
+        $orbitMap = new OrbitalMap($this->loadFileInput($input['filename']));
+        $this->assertEquals($expectedResult, $orbitMap->shortestTraversal($input['nodeOne'], $input['nodeTwo']));
+    }
+
     protected function loadFileInput($expectedFilePath)
     {
         return file_get_contents($expectedFilePath);
@@ -75,13 +84,27 @@ class OrbitalMapTest extends TestCase
                 ]
             ],
             [
-                __DIR__ . '/input/largeInput.txt',
+                __DIR__ . '/input/rawLargeInput.txt',
                 [
                     'D' => 0,
                     'L' => 0,
                     'all' => 227612
                 ]
             ]
+        ];
+    }
+
+    public function dataProviderForTraversal()
+    {
+        return [
+            [
+                [
+                    'filename' => __DIR__ . '/input/rawTraversalInput.txt',
+                    'nodeOne' => 'YOU',
+                    'nodeTwo' => 'SAN'
+                ],
+                4
+            ],
         ];
     }
 
