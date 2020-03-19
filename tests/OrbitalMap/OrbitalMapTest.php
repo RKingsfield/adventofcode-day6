@@ -67,14 +67,20 @@ class OrbitalMapTest extends TestCase
                 ]
             ],
             [
-
                 __DIR__ . '/input/rawComplexInput.txt',
                 [
                     'D' => 3,
                     'L' => 7,
                     'all' => 42
                 ]
-
+            ],
+            [
+                __DIR__ . '/input/largeInput.txt',
+                [
+                    'D' => 0,
+                    'L' => 0,
+                    'all' => 227612
+                ]
             ]
         ];
     }
