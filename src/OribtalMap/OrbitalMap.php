@@ -1,21 +1,23 @@
 <?php
 
-namespace App\OrbitCounter;
+namespace App\OrbitalMap;
 
 use InvalidArgumentException;
 
-class OrbitMap
+class OrbitalMap
 {
+    const ROUTE_NODE = 'COM';
+
     protected $map;
 
     public function __construct(string $inputMap)
     {
-        $map['COM'] = [];
+        $this->map[self::ROUTE_NODE] = [];
         $holding = [];
         foreach (explode(PHP_EOL, $inputMap) as $k => $orbitalBody) {
             $nodes = explode(')', $orbitalBody);
             if (count($nodes) !== 2) {
-                throw new InvalidArgumentException('Invalid Orbital Map given');
+                throw new InvalidArgumentException('Invalid Orbital OrbitalMap given');
             }
 
             $parentNode = $nodes[0];
@@ -25,24 +27,23 @@ class OrbitMap
                 unset($holding[$childNode]);
             }
 
-            if ($route = $this->findRouteToNode($map, $parentNode)) {
-                $map = $this->addToMap($map, $route, $childNode);
+            if ($route = $this->findRouteToNode($this->map, $parentNode)) {
+                $this->addToMap($route, $childNode);
             } else {
                 $holding[$parentNode] = $childNode;
             }
         }
-        $this->map = $map;
     }
 
-    protected function addToMap(array $map, array $route, string $child): array
+    protected function addToMap(array $route, string $child): self
     {
-        $previousNode = &$map;
+        $previousNode = &$this->map;
         foreach ($route as $nodeIndex) {
             $previousNode = &$previousNode[$nodeIndex];
         }
 
         $previousNode[$child] = [];
-        return $map;
+        return $this;
     }
 
     protected function findRouteToNode(array $map, string $nodeToFind): ?array
@@ -64,5 +65,32 @@ class OrbitMap
     public function asArray(): array
     {
         return $this->map;
+    }
+
+    public function countOrbits(string $n, bool $includeChildrenCount = true): int
+    {
+        $route = $this->findRouteToNode($this->map, $n);
+        $count = count($route) - 1;
+        if (!$includeChildrenCount) {
+            return $count;
+        }
+        foreach ($this->getNode($route) as $childNodeIndex => $childNode) {
+            $count += $this->countOrbits($childNodeIndex);
+        }
+        return $count;
+    }
+
+    public function countTotalOrbits(): int
+    {
+        return $this->countOrbits(self::ROUTE_NODE);
+    }
+
+    protected function getNode(array $route): array
+    {
+        $currentNode = $this->map;
+        foreach ($route as $index) {
+            $currentNode = $currentNode[$index];
+        }
+        return $currentNode;
     }
 }

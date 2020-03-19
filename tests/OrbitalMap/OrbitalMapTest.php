@@ -1,31 +1,31 @@
 <?php
 
-namespace App\Tests\OrbitMap;
+namespace App\Tests\OrbitalMap;
 
-use App\OrbitCounter\OrbitMap;
+use App\OrbitalMap\OrbitalMap;
 use PHPUnit\Framework\TestCase;
 
-class OrbitMapTest extends TestCase
+class OrbitalMapTest extends TestCase
 {
     /**
      * @dataProvider dataProviderForConstructor
      */
     public function testOrbitCounterConstructor($input, $expectedResult)
     {
-        $orbitMap = new OrbitMap($this->loadFileInput($input));
+        $orbitMap = new OrbitalMap($this->loadFileInput($input));
         $this->assertEquals($expectedResult, $orbitMap->asArray());
     }
 
     /**
      * @dataProvider dataProviderForCounter
-     * @depends testOrbitCounterConstructor
+     * @depends      testOrbitCounterConstructor
      */
     public function testOrbitCount($input, $expectedResult)
     {
-        $orbitMap = new OrbitMap($this->loadFileInput($input));
-        $this->assertEquals($expectedResult['D'], $orbitMap->countOrbits('D'));
-        $this->assertEquals($expectedResult['L'], $orbitMap->countOrbits('L'));
-        $this->assertEquals($expectedResult['all'], $orbitMap->countOrbits());
+        $orbitMap = new OrbitalMap($this->loadFileInput($input));
+        $this->assertEquals($expectedResult['D'], $orbitMap->countOrbits('D', false));
+        $this->assertEquals($expectedResult['L'], $orbitMap->countOrbits('L', false));
+        $this->assertEquals($expectedResult['all'], $orbitMap->countTotalOrbits());
     }
 
     protected function loadFileInput($expectedFilePath)
