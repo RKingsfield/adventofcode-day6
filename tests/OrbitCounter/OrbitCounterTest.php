@@ -2,13 +2,14 @@
 
 namespace App\Tests\OrbitCounter;
 
+use App\OrbitCounter\OrbitCounter;
 use PHPUnit\Framework\TestCase;
 
 class OrbitCounterTest extends TestCase
 {
 
     /**
-     * @dataProvider dataProvider
+     * @dataProvider dataProviderForConstructor
      */
     public function testOrbitCounterConstructor($input, $expectedResult)
     {
@@ -17,7 +18,8 @@ class OrbitCounterTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProvider
+     * @dataProvider dataProviderForCounter
+     * @depends testOrbitCounterConstructor
      */
     public function testOrbitCount($input, $expectedResult)
     {
@@ -32,7 +34,7 @@ class OrbitCounterTest extends TestCase
         return file_get_contents($expectedFilePath);
     }
 
-    public function dataProvider()
+    public function dataProviderForConstructor()
     {
         return [
             [
@@ -59,7 +61,13 @@ class OrbitCounterTest extends TestCase
                         ]
                     ]
                 ]
-            ],
+            ]
+        ];
+    }
+
+    public function dataProviderForCounter()
+    {
+        return [
             [
                 __DIR__ . '/input/orbitalMap.txt',
                 [
